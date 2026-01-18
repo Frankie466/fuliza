@@ -1,0 +1,1223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fuliza Increment with M-Pesa</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            background: linear-gradient(to right, #1a2980, #26d0ce);
+            color: white;
+            padding: 25px;
+            border-radius: 20px 20px 0 0;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .header p {
+            opacity: 0.9;
+            font-size: 15px;
+        }
+        
+        .main-content {
+            background-color: white;
+            border-radius: 0 0 20px 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        .loan-display {
+            background-color: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            margin-bottom: 30px;
+            border: 1px solid #eaeaea;
+        }
+        
+        .amount-label {
+            color: #666;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+        
+        .amount {
+            font-size: 48px;
+            font-weight: 700;
+            color: #1a2980;
+            margin-bottom: 5px;
+        }
+        
+        .fee-display {
+            font-size: 18px;
+            color: #26d0ce;
+            font-weight: 600;
+        }
+        
+        .controls {
+            margin-bottom: 30px;
+        }
+        
+        .control-group {
+            margin-bottom: 25px;
+        }
+        
+        .control-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .range-value {
+            color: #1a2980;
+            font-weight: 700;
+        }
+        
+        .slider-container {
+            position: relative;
+            height: 40px;
+        }
+        
+        input[type="range"] {
+            width: 100%;
+            height: 8px;
+            border-radius: 5px;
+            background: linear-gradient(to right, #1a2980, #26d0ce);
+            outline: none;
+            -webkit-appearance: none;
+        }
+        
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: #1a2980;
+            cursor: pointer;
+            border: 3px solid white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+        
+        .buttons {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        
+        .increment-btn {
+            background: linear-gradient(to right, #1a2980, #26d0ce);
+            color: white;
+            border: none;
+            padding: 15px 10px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .increment-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(26, 41, 128, 0.2);
+        }
+        
+        .action-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .action-btn {
+            padding: 18px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            border: none;
+        }
+        
+        .auth-btn {
+            background: linear-gradient(to right, #4CAF50, #8BC34A);
+            color: white;
+        }
+        
+        .pay-btn {
+            background: linear-gradient(to right, #FF9800, #FFB74D);
+            color: white;
+        }
+        
+        .reset-btn {
+            background: #f8f9fa;
+            color: #333;
+            border: 2px solid #ddd;
+            width: 100%;
+        }
+        
+        .action-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .action-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .summary {
+            background-color: #f8f9fa;
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 10px;
+        }
+        
+        .summary h3 {
+            color: #1a2980;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .summary-item:last-child {
+            border-bottom: none;
+            font-weight: 700;
+            color: #1a2980;
+            font-size: 18px;
+        }
+        
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .modal-content {
+            background-color: white;
+            border-radius: 15px;
+            width: 100%;
+            max-width: 500px;
+            overflow: hidden;
+            animation: modalSlide 0.3s ease-out;
+        }
+        
+        @keyframes modalSlide {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        .modal-header {
+            background: linear-gradient(to right, #1a2980, #26d0ce);
+            color: white;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .modal-header h2 {
+            font-size: 22px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .close-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+        }
+        
+        .modal-body {
+            padding: 30px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: #1a2980;
+            box-shadow: 0 0 0 2px rgba(26, 41, 128, 0.1);
+        }
+        
+        .submit-btn {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(to right, #1a2980, #26d0ce);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .payment-status {
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .status-icon {
+            font-size: 60px;
+            margin-bottom: 20px;
+        }
+        
+        .success {
+            color: #4CAF50;
+        }
+        
+        .processing {
+            color: #FF9800;
+        }
+        
+        .failure {
+            color: #f44336;
+        }
+        
+        .user-info {
+            background-color: #e8f4fc;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+            display: none;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .user-info div {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .api-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+        
+        .status-indicator {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: #ccc;
+        }
+        
+        .status-indicator.connected {
+            background-color: #4CAF50;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+            font-size: 14px;
+            border-top: 1px solid #eee;
+            margin-top: 30px;
+        }
+        
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            border-radius: 8px;
+            color: white;
+            z-index: 10000;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            animation: slideIn 0.3s ease-out;
+            max-width: 400px;
+        }
+        
+        .notification.success {
+            background-color: #4CAF50;
+        }
+        
+        .notification.error {
+            background-color: #f44336;
+        }
+        
+        .notification.info {
+            background-color: #2196F3;
+        }
+        
+        .notification.warning {
+            background-color: #FF9800;
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        @keyframes slideOut {
+            from { transform: translateX(0); opacity: 1; }
+            to { transform: translateX(100%); opacity: 0; }
+        }
+        
+        @media (max-width: 600px) {
+            .content {
+                padding: 20px;
+            }
+            
+            .amount {
+                font-size: 40px;
+            }
+            
+            .buttons {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .action-buttons {
+                grid-template-columns: 1fr;
+            }
+            
+            .user-info {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-money-bill-wave"></i> Fuliza Increment System</h1>
+            <p>Increase your Fuliza limit instantly with M-Pesa</p>
+        </div>
+        
+        <div class="main-content">
+            <div class="content">
+                <div id="userInfo" class="user-info">
+                    <div>
+                        <i class="fas fa-user-circle"></i>
+                        <span>ID: <span id="displayUserId">-</span></span>
+                    </div>
+                    <div>
+                        <i class="fas fa-phone"></i>
+                        <span>Phone: <span id="displayPhone">-</span></span>
+                    </div>
+                    <div class="api-status">
+                        <span class="status-indicator" id="userStatusIndicator"></span>
+                        <span id="userStatusText">Ready for payment</span>
+                    </div>
+                </div>
+                
+                <div class="loan-display">
+                    <div class="amount-label">Fuliza Amount</div>
+                    <div class="amount">Ksh <span id="loanAmount">1,000</span></div>
+                    <div class="fee-display">Increment Fee: Ksh <span id="incrementFee">50</span></div>
+                </div>
+                
+                <div class="controls">
+                    <div class="control-group">
+                        <div class="control-label">
+                            <span>Adjust Fuliza Amount</span>
+                            <span class="range-value">Ksh <span id="rangeValue">1000</span></span>
+                        </div>
+                        <div class="slider-container">
+                            <input type="range" id="loanSlider" min="100" max="5000" step="100" value="1000">
+                            <div class="slider-ticks">
+                                <div class="tick">100</div>
+                                <div class="tick">1500</div>
+                                <div class="tick">3000</div>
+                                <div class="tick">5000</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="buttons">
+                    <button class="increment-btn" data-increment="100">
+                        <i class="fas fa-plus"></i>
+                        <span>+ Ksh 100</span>
+                    </button>
+                    <button class="increment-btn" data-increment="500">
+                        <i class="fas fa-plus"></i>
+                        <span>+ Ksh 500</span>
+                    </button>
+                    <button class="increment-btn" data-increment="1000">
+                        <i class="fas fa-plus"></i>
+                        <span>+ Ksh 1,000</span>
+                    </button>
+                </div>
+                
+                <div class="action-buttons">
+                    <button class="action-btn auth-btn" id="authBtn">
+                        <i class="fas fa-user-check"></i>
+                        Enter User Details
+                    </button>
+                    <button class="action-btn pay-btn" id="payBtn" disabled>
+                        <i class="fas fa-mobile-alt"></i>
+                        Pay with M-Pesa
+                    </button>
+                </div>
+                
+                <button class="action-btn reset-btn" id="resetBtn">
+                    <i class="fas fa-redo"></i>
+                    Reset Amount
+                </button>
+                
+                <div class="summary">
+                    <h3><i class="fas fa-file-invoice-dollar"></i> Payment Summary</h3>
+                    <div class="summary-item">
+                        <span>Fuliza Amount:</span>
+                        <span>Ksh <span id="summaryAmount">1,000</span></span>
+                    </div>
+                    <div class="summary-item">
+                        <span>Increment Fee (5%):</span>
+                        <span>Ksh <span id="summaryFee">50</span></span>
+                    </div>
+                    <div class="summary-item">
+                        <span>Total to Repay:</span>
+                        <span>Ksh <span id="totalRepay">1,050</span></span>
+                    </div>
+                </div>
+                
+                <div class="api-status" style="margin-top: 20px; justify-content: center;">
+                    <span class="status-indicator" id="apiStatusIndicator"></span>
+                    <span id="apiStatusText">Connecting to server...</span>
+                </div>
+            </div>
+            
+            <div class="footer">
+                <p>Production Ready Fuliza System | Secure M-Pesa Integration</p>
+                <p style="font-size: 12px; margin-top: 5px; color: #888;" id="serverUrl"></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Authentication Modal -->
+    <div class="modal" id="authModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-user-circle"></i> Enter Your Details</h2>
+                <button class="close-btn" id="closeAuthModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="authForm">
+                    <div class="form-group">
+                        <label for="userId">User ID</label>
+                        <input type="text" id="userId" placeholder="Enter your ID number" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="phoneNumber">M-Pesa Phone Number</label>
+                        <input type="tel" id="phoneNumber" placeholder="07XX XXX XXX" required>
+                    </div>
+                    <button type="submit" class="submit-btn">
+                        <i class="fas fa-check-circle"></i>
+                        Submit Details
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Payment Modal -->
+    <div class="modal" id="paymentModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-mobile-alt"></i> M-Pesa Payment</h2>
+                <button class="close-btn" id="closePaymentModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="paymentInit">
+                    <div class="form-group">
+                        <label for="confirmPhone">Confirm Phone Number</label>
+                        <input type="tel" id="confirmPhone" placeholder="07XX XXX XXX" required>
+                    </div>
+                    <div class="summary" style="margin: 20px 0; background-color: #f0f8ff;">
+                        <div class="summary-item">
+                            <span>Amount to Pay:</span>
+                            <span>Ksh <span id="paymentAmount">1,050</span></span>
+                        </div>
+                        <div class="summary-item">
+                            <span>Transaction Fee:</span>
+                            <span>Ksh <span id="transactionFee">0</span></span>
+                        </div>
+                        <div class="summary-item">
+                            <span>Total Deduction:</span>
+                            <span>Ksh <span id="totalDeduction">1,050</span></span>
+                        </div>
+                    </div>
+                    <button class="submit-btn" id="initiatePaymentBtn">
+                        <i class="fas fa-paper-plane"></i>
+                        Initiate M-Pesa Payment
+                    </button>
+                </div>
+                
+                <div id="paymentStatus" class="payment-status" style="display: none;">
+                    <div class="status-icon processing">
+                        <i class="fas fa-sync-alt fa-spin"></i>
+                    </div>
+                    <h3>Processing Payment...</h3>
+                    <p>Check your phone for M-Pesa prompt</p>
+                    <div class="summary" style="margin: 20px 0; background-color: #f0f8ff;">
+                        <div class="summary-item">
+                            <span>Reference:</span>
+                            <span><span id="transactionRef">FLZ123456</span></span>
+                        </div>
+                        <div class="summary-item">
+                            <span>Time:</span>
+                            <span><span id="transactionTime">12:30:45</span></span>
+                        </div>
+                        <div class="summary-item">
+                            <span>Status:</span>
+                            <span><span id="apiResponse">Initiating payment...</span></span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="paymentSuccess" class="payment-status" style="display: none;">
+                    <div class="status-icon success">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <h3>Payment Successful!</h3>
+                    <p>Your Fuliza has been incremented successfully</p>
+                    <div class="summary" style="margin: 20px 0; background-color: #f0f8ff;">
+                        <div class="summary-item">
+                            <span>Amount Paid:</span>
+                            <span>Ksh <span id="successAmount">1,050</span></span>
+                        </div>
+                        <div class="summary-item">
+                            <span>New Fuliza Limit:</span>
+                            <span>Ksh <span id="newLimit">2,050</span></span>
+                        </div>
+                        <div class="summary-item">
+                            <span>Transaction Code:</span>
+                            <span><span id="mpesaCode">ABC123XYZ</span></span>
+                        </div>
+                    </div>
+                    <button class="submit-btn" id="closeSuccessBtn">
+                        <i class="fas fa-times"></i>
+                        Close
+                    </button>
+                </div>
+                
+                <div id="paymentError" class="payment-status" style="display: none;">
+                    <div class="status-icon failure">
+                        <i class="fas fa-times-circle"></i>
+                    </div>
+                    <h3>Payment Failed</h3>
+                    <p id="errorMessage">Unable to process payment at this time</p>
+                    <button class="submit-btn" id="retryPaymentBtn">
+                        <i class="fas fa-redo"></i>
+                        Try Again
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Auto-detect API base URL
+        const API_BASE_URL = window.location.origin + '/api';
+        
+        // DOM Elements
+        const loanAmountElement = document.getElementById('loanAmount');
+        const incrementFeeElement = document.getElementById('incrementFee');
+        const loanSlider = document.getElementById('loanSlider');
+        const rangeValueElement = document.getElementById('rangeValue');
+        const summaryAmountElement = document.getElementById('summaryAmount');
+        const summaryFeeElement = document.getElementById('summaryFee');
+        const totalRepayElement = document.getElementById('totalRepay');
+        const incrementButtons = document.querySelectorAll('.increment-btn');
+        const resetButton = document.getElementById('resetBtn');
+        const authButton = document.getElementById('authBtn');
+        const payButton = document.getElementById('payBtn');
+        const authModal = document.getElementById('authModal');
+        const paymentModal = document.getElementById('paymentModal');
+        const closeAuthModal = document.getElementById('closeAuthModal');
+        const closePaymentModal = document.getElementById('closePaymentModal');
+        const authForm = document.getElementById('authForm');
+        const userInfo = document.getElementById('userInfo');
+        const displayUserId = document.getElementById('displayUserId');
+        const displayPhone = document.getElementById('displayPhone');
+        const paymentAmount = document.getElementById('paymentAmount');
+        const totalDeduction = document.getElementById('totalDeduction');
+        const initiatePaymentBtn = document.getElementById('initiatePaymentBtn');
+        const paymentInit = document.getElementById('paymentInit');
+        const paymentStatus = document.getElementById('paymentStatus');
+        const paymentSuccess = document.getElementById('paymentSuccess');
+        const paymentError = document.getElementById('paymentError');
+        const transactionRef = document.getElementById('transactionRef');
+        const transactionTime = document.getElementById('transactionTime');
+        const successAmount = document.getElementById('successAmount');
+        const newLimit = document.getElementById('newLimit');
+        const closeSuccessBtn = document.getElementById('closeSuccessBtn');
+        const confirmPhone = document.getElementById('confirmPhone');
+        const retryPaymentBtn = document.getElementById('retryPaymentBtn');
+        const errorMessage = document.getElementById('errorMessage');
+        const apiResponse = document.getElementById('apiResponse');
+        const mpesaCode = document.getElementById('mpesaCode');
+        const apiStatusIndicator = document.getElementById('apiStatusIndicator');
+        const apiStatusText = document.getElementById('apiStatusText');
+        const userStatusIndicator = document.getElementById('userStatusIndicator');
+        const userStatusText = document.getElementById('userStatusText');
+        const serverUrlElement = document.getElementById('serverUrl');
+        
+        // Application State
+        let userAuthenticated = false;
+        let currentUserId = '';
+        let currentPhone = '';
+        let currentLoanAmount = 1000;
+        let transactionInProgress = false;
+        let serverConnected = false;
+        
+        // Fee rate (5%)
+        const FEE_RATE = 0.05;
+        
+        // Display server URL
+        serverUrlElement.textContent = `API: ${API_BASE_URL}`;
+        
+        // Format currency in Kenyan Shillings
+        function formatCurrency(amount) {
+            return amount.toLocaleString('en-KE');
+        }
+        
+        // Generate random transaction reference
+        function generateTransactionRef() {
+            const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            const numbers = '0123456789';
+            let ref = 'FLZ';
+            
+            for (let i = 0; i < 6; i++) {
+                ref += numbers.charAt(Math.floor(Math.random() * numbers.length));
+            }
+            
+            return ref;
+        }
+        
+        // Get current time in HH:MM:SS format
+        function getCurrentTime() {
+            const now = new Date();
+            return now.toLocaleTimeString('en-KE', { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' });
+        }
+        
+        // Calculate fee based on loan amount
+        function calculateFee(loanAmount) {
+            return Math.round(loanAmount * FEE_RATE);
+        }
+        
+        // Update all display elements
+        function updateDisplay(loanAmount) {
+            const fee = calculateFee(loanAmount);
+            const totalRepay = loanAmount + fee;
+            
+            // Update main display
+            loanAmountElement.textContent = formatCurrency(loanAmount);
+            incrementFeeElement.textContent = formatCurrency(fee);
+            
+            // Update slider value
+            rangeValueElement.textContent = formatCurrency(loanAmount);
+            
+            // Update summary
+            summaryAmountElement.textContent = formatCurrency(loanAmount);
+            summaryFeeElement.textContent = formatCurrency(fee);
+            totalRepayElement.textContent = formatCurrency(totalRepay);
+            
+            // Update payment modal amounts
+            paymentAmount.textContent = formatCurrency(totalRepay);
+            totalDeduction.textContent = formatCurrency(totalRepay);
+            
+            // Store current loan amount
+            currentLoanAmount = loanAmount;
+        }
+        
+        // Show notification
+        function showNotification(message, type = 'info') {
+            // Remove existing notifications
+            document.querySelectorAll('.notification').forEach(n => n.remove());
+            
+            // Create notification element
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.textContent = message;
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                padding: 15px 20px;
+                border-radius: 8px;
+                color: white;
+                z-index: 10000;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                animation: slideIn 0.3s ease-out;
+                max-width: 400px;
+            `;
+            
+            document.body.appendChild(notification);
+            
+            // Remove after 5 seconds
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease-out';
+                setTimeout(() => notification.remove(), 300);
+            }, 5000);
+        }
+        
+        // API Functions
+        async function checkServerConnection() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/health`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                if (response.ok) {
+                    serverConnected = true;
+                    apiStatusIndicator.classList.add('connected');
+                    apiStatusText.textContent = 'Connected to server';
+                    return true;
+                } else {
+                    throw new Error('Server not responding');
+                }
+            } catch (error) {
+                serverConnected = false;
+                apiStatusIndicator.classList.remove('connected');
+                apiStatusText.textContent = 'Server connection failed';
+                console.error('Server connection error:', error);
+                return false;
+            }
+        }
+        
+        async function initiateMpesaPayment(phone, amount, reference) {
+            if (!serverConnected) {
+                throw new Error('Not connected to payment server');
+            }
+            
+            const response = await fetch(`${API_BASE_URL}/initiate-payment`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    phone: phone,
+                    amount: amount,
+                    reference: reference,
+                    userId: currentUserId,
+                    description: `Fuliza Increment - ${reference}`
+                })
+            });
+            
+            if (!response.ok) {
+                const error = await response.json();
+                throw new Error(error.message || 'Payment initiation failed');
+            }
+            
+            return await response.json();
+        }
+        
+        async function checkPaymentStatus(reference) {
+            if (!serverConnected) {
+                throw new Error('Not connected to payment server');
+            }
+            
+            const response = await fetch(`${API_BASE_URL}/payment-status/${reference}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+            
+            if (!response.ok) {
+                throw new Error('Failed to check payment status');
+            }
+            
+            return await response.json();
+        }
+        
+        // Handle slider input
+        loanSlider.addEventListener('input', function() {
+            const loanAmount = parseInt(this.value);
+            updateDisplay(loanAmount);
+        });
+        
+        // Handle increment buttons
+        incrementButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const increment = parseInt(this.getAttribute('data-increment'));
+                const currentAmount = parseInt(loanSlider.value);
+                const newAmount = currentAmount + increment;
+                
+                // Cap at maximum slider value
+                const maxAmount = parseInt(loanSlider.max);
+                if (newAmount <= maxAmount) {
+                    loanSlider.value = newAmount;
+                    updateDisplay(newAmount);
+                } else {
+                    // If exceeds max, set to max
+                    loanSlider.value = maxAmount;
+                    updateDisplay(maxAmount);
+                    
+                    // Visual feedback that max was reached
+                    this.style.backgroundColor = '#ff6b6b';
+                    setTimeout(() => {
+                        this.style.backgroundColor = '';
+                    }, 300);
+                }
+            });
+        });
+        
+        // Handle reset button
+        resetButton.addEventListener('click', function() {
+            loanSlider.value = 1000;
+            updateDisplay(1000);
+            
+            // Visual feedback
+            this.style.backgroundColor = '#1a2980';
+            this.style.color = 'white';
+            setTimeout(() => {
+                this.style.backgroundColor = '';
+                this.style.color = '';
+            }, 300);
+        });
+        
+        // Authentication modal
+        authButton.addEventListener('click', function() {
+            if (!serverConnected) {
+                showNotification('Please wait for server connection', 'warning');
+                return;
+            }
+            
+            authModal.style.display = 'flex';
+        });
+        
+        closeAuthModal.addEventListener('click', function() {
+            authModal.style.display = 'none';
+        });
+        
+        // Close modals when clicking outside
+        window.addEventListener('click', function(event) {
+            if (event.target === authModal) {
+                authModal.style.display = 'none';
+            }
+            if (event.target === paymentModal && !transactionInProgress) {
+                paymentModal.style.display = 'none';
+            }
+        });
+        
+        // Handle authentication form submission
+        authForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const userId = document.getElementById('userId').value.trim();
+            const phone = document.getElementById('phoneNumber').value.trim();
+            
+            if (userId && phone) {
+                // Validate phone number (simple Kenyan format check)
+                const phoneRegex = /^(07\d{8}|7\d{8}|\+2547\d{8})$/;
+                if (!phoneRegex.test(phone)) {
+                    showNotification('Please enter a valid Kenyan phone number (e.g., 07XX XXX XXX)', 'error');
+                    return;
+                }
+                
+                // Format phone number to standard format
+                let formattedPhone = phone;
+                if (phone.startsWith('07')) {
+                    formattedPhone = phone;
+                } else if (phone.startsWith('7')) {
+                    formattedPhone = `0${phone}`;
+                } else if (phone.startsWith('+2547')) {
+                    formattedPhone = `0${phone.substring(4)}`;
+                }
+                
+                // Store user data
+                currentUserId = userId;
+                currentPhone = formattedPhone;
+                userAuthenticated = true;
+                
+                // Update UI
+                displayUserId.textContent = userId;
+                displayPhone.textContent = formattedPhone;
+                userInfo.style.display = 'flex';
+                userStatusIndicator.classList.add('connected');
+                userStatusText.textContent = 'Ready for payment';
+                
+                // Enable payment button
+                payButton.disabled = false;
+                
+                // Close modal and reset form
+                authModal.style.display = 'none';
+                authForm.reset();
+                
+                // Show success message
+                showNotification('User details saved successfully! You can now proceed to payment.', 'success');
+            }
+        });
+        
+        // Payment modal
+        payButton.addEventListener('click', function() {
+            if (!userAuthenticated) {
+                showNotification('Please enter your user details first.', 'warning');
+                authModal.style.display = 'flex';
+                return;
+            }
+            
+            if (!serverConnected) {
+                showNotification('Payment server not connected. Please try again.', 'error');
+                return;
+            }
+            
+            // Pre-fill phone number in payment modal
+            confirmPhone.value = currentPhone;
+            
+            // Reset payment modal to initial state
+            paymentInit.style.display = 'block';
+            paymentStatus.style.display = 'none';
+            paymentSuccess.style.display = 'none';
+            paymentError.style.display = 'none';
+            
+            paymentModal.style.display = 'flex';
+        });
+        
+        closePaymentModal.addEventListener('click', function() {
+            if (!transactionInProgress) {
+                paymentModal.style.display = 'none';
+            }
+        });
+        
+        // Initiate payment process
+        initiatePaymentBtn.addEventListener('click', async function() {
+            const phone = confirmPhone.value.trim();
+            
+            // Validate phone matches
+            if (phone !== currentPhone) {
+                showNotification('Phone number does not match the registered number', 'error');
+                return;
+            }
+            
+            // Show processing status
+            paymentInit.style.display = 'none';
+            paymentStatus.style.display = 'block';
+            
+            // Generate transaction details
+            const ref = generateTransactionRef();
+            const time = getCurrentTime();
+            const totalRepay = currentLoanAmount + calculateFee(currentLoanAmount);
+            
+            transactionRef.textContent = ref;
+            transactionTime.textContent = time;
+            apiResponse.textContent = 'Initiating STK Push...';
+            
+            // Set transaction in progress
+            transactionInProgress = true;
+            
+            try {
+                // Call backend API to initiate STK Push
+                const response = await initiateMpesaPayment(phone, totalRepay, ref);
+                
+                apiResponse.textContent = `STK Push sent to ${phone}`;
+                
+                if (response.success) {
+                    // STK Push initiated successfully
+                    // Poll for payment status
+                    let paymentConfirmed = false;
+                    let attempts = 0;
+                    const maxAttempts = 30; // 2.5 minutes polling
+                    
+                    const pollInterval = setInterval(async () => {
+                        if (attempts >= maxAttempts) {
+                            clearInterval(pollInterval);
+                            apiResponse.textContent = 'Payment timeout. Please check your phone.';
+                            setTimeout(() => {
+                                transactionInProgress = false;
+                                paymentStatus.style.display = 'none';
+                                paymentError.style.display = 'block';
+                                errorMessage.textContent = 'Payment timeout. Please check if you completed the M-Pesa prompt.';
+                            }, 2000);
+                            return;
+                        }
+                        
+                        attempts++;
+                        apiResponse.textContent = `Waiting for payment confirmation... (${attempts}/${maxAttempts})`;
+                        
+                        try {
+                            const status = await checkPaymentStatus(ref);
+                            
+                            if (status.status === 'completed') {
+                                clearInterval(pollInterval);
+                                paymentConfirmed = true;
+                                
+                                transactionInProgress = false;
+                                paymentStatus.style.display = 'none';
+                                paymentSuccess.style.display = 'block';
+                                
+                                // Update success details
+                                successAmount.textContent = formatCurrency(totalRepay);
+                                
+                                // Calculate new limit (current loan + fee paid)
+                                const newFulizaLimit = currentLoanAmount + 1000;
+                                newLimit.textContent = formatCurrency(newFulizaLimit);
+                                
+                                // Show M-Pesa transaction code
+                                mpesaCode.textContent = status.mpesaReceiptNumber || `MP${ref.substring(3)}`;
+                                
+                                showNotification('Payment successful! Your Fuliza limit has been increased.', 'success');
+                            } else if (status.status === 'failed') {
+                                clearInterval(pollInterval);
+                                throw new Error(status.message || 'Payment failed');
+                            }
+                        } catch (error) {
+                            // Continue polling on status check errors
+                            console.log('Polling error:', error.message);
+                        }
+                    }, 5000); // Poll every 5 seconds
+                    
+                } else {
+                    throw new Error(response.message || 'Failed to initiate STK Push');
+                }
+            } catch (error) {
+                transactionInProgress = false;
+                paymentStatus.style.display = 'none';
+                paymentError.style.display = 'block';
+                errorMessage.textContent = error.message || 'Payment processing failed';
+                
+                showNotification(`Payment failed: ${error.message}`, 'error');
+                console.error('Payment error:', error);
+            }
+        });
+        
+        // Retry payment
+        retryPaymentBtn.addEventListener('click', function() {
+            paymentError.style.display = 'none';
+            paymentInit.style.display = 'block';
+        });
+        
+        // Close success message
+        closeSuccessBtn.addEventListener('click', function() {
+            paymentModal.style.display = 'none';
+            
+            // Reset loan amount after successful payment
+            loanSlider.value = 1000;
+            updateDisplay(1000);
+            
+            // Show confirmation
+            showNotification('Payment processed successfully! Your Fuliza limit has been updated.', 'success');
+        });
+        
+        // Initialize
+        async function init() {
+            // Initialize display
+            updateDisplay(parseInt(loanSlider.value));
+            
+            // Disable buttons until server connection
+            authButton.disabled = true;
+            payButton.disabled = true;
+            
+            // Check server connection
+            const connected = await checkServerConnection();
+            
+            if (connected) {
+                authButton.disabled = false;
+                showNotification('Connected to payment server', 'success');
+            } else {
+                showNotification('Cannot connect to payment server. Please check if the backend is running.', 'error');
+            }
+            
+            // Check connection periodically
+            setInterval(checkServerConnection, 60000); // Check every minute
+        }
+        
+        // Start the application
+        init();
+    </script>
+</body>
+</html>

@@ -1,0 +1,19 @@
+{
+  "name": "fuliza-mpesa-vercel",
+  "version": "1.0.0",
+  "description": "Fuliza Increment System with M-Pesa Integration - Deployed on Vercel",
+  "engines": {
+    "node": ">=18.x"
+  },
+  "scripts": {
+    "dev": "vercel dev",
+    "start": "node server.js",
+    "deploy": "vercel --prod"
+  },
+  "dependencies": {
+    "cors": "^2.8.5"
+  },
+  "devDependencies": {
+    "@vercel/node": "^3.0.0"
+  }
+}
